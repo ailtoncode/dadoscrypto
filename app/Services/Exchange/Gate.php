@@ -34,11 +34,12 @@ class Gate extends Brokers
         }
 
         foreach ($this->jsonObject as $dataCoin) {
-            $coin->create(
+            $coinCopy = clone $coin;
+            $coinCopy->create(
                 $dataCoin["currency_pair"],
                 $dataCoin["last"]
             );
-            $this->coin[] = $coin;
+            $this->addCoin($coinCopy);
         }
     }
 }

@@ -18,7 +18,7 @@ class Symbol extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'symbol',
         'id_broker'
     ];
 

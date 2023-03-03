@@ -7,16 +7,13 @@ use App\Services\FetchCurl;
 
 abstract class Brokers
 {
-    protected $coin;
+    private $coin = [];
     protected $jsonObject;
 
     public function __construct($url)
     {
-        //$this->jsonObject = json_decode(FetchCurl::start($url), true);
-        $this->jsonObject[] = [
-            "currency_pair" => 'BTC_USDT',
-            "last" => 1.75
-        ];
+        $this->jsonObject = json_decode(FetchCurl::start($url), true);
+        //$this->jsonObject = json_decode(file_get_contents(__DIR__ . '/example-file/binance.txt'), true);
     }
 
     abstract public function processData(CoinInterface $coin);
@@ -26,12 +23,17 @@ abstract class Brokers
         return $this->coin;
     }
 
-    public function getAllSymbols()
+    public function getAllSymbols(): array
     {
         $symbols = [];
         foreach ($this->coin as $coin) {
             $symbols[] = $coin->getSymbol();
         }
         return $symbols;
+    }
+
+    protected function addCoin(CoinInterface $coin)
+    {
+        $this->coin[] = $coin;
     }
 }

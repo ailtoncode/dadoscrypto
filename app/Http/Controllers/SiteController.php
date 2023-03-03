@@ -8,5 +8,6 @@ class SiteController extends Controller
 {
     public function index()
     {
+        return "SiteController Index";
     }
 }

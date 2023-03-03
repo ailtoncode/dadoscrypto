@@ -7,24 +7,49 @@ use App\Services\Exchange\Gate;
 use App\Services\Exchange\Coin;
 use App\Models\Symbol;
 use App\Models\Broker;
+use App\Services\Exchange\Binance;
 
 class ExchangeController extends Controller
 {
+    private $coin;
+    private $brokers;
+
+    public function __construct()
+    {
+        $this->coin = new Coin();
+        $this->brokers['gate'] = new Gate();
+        $this->brokers['binance'] = new Binance();
+        $this->brokers = (object)$this->brokers;
+    }
+
     public function symbols()
     {
-        $coin = new Coin();
-        $gate = new Gate("https://api.gateio.ws/api/v4/spot/tickers");
-        $gate->processData($coin);
+        $this->brokers->gate->processData($this->coin);
+        $this->brokers->binance->processData($this->coin);
 
-        $broker = Broker::where('name', 'gate')->first();
-        foreach ($gate->getAllSymbols() as $value) {
-            if (!isset($broker->id)) {
-                break;
+        $gateSymbols = $this->brokers->gate->getAllSymbols();
+        $binanceSymbols = $this->brokers->binance->getAllSymbols();
+
+        $broker = Broker::where('name', 'gate');
+        foreach ($gateSymbols as $value) {
+            $symbol = Symbol::where('symbol', $value)->first();
+            if (!$symbol) {
+                $symbol["symbol"] = $value;
+                $symbol["id_broker"] = $broker->id;
+                Symbol::create($symbol);
             }
-            $symbol["name"] = $value;
-            $symbol["id_broker"] = $broker->id;
-            Symbol::create($symbol);
         }
-        return dd($broker);
+
+        $broker = Broker::where('name', 'binance');
+        foreach ($binanceSymbols as $value) {
+            $symbol = Symbol::where('symbol', $value)->first();
+            if (!$symbol) {
+                $symbol["symbol"] = $value;
+                $symbol["id_broker"] = $broker->id;
+                Symbol::create($symbol);
+            }
+        }
+
+        return dd([$this->brokers->binance->getAllSymbols()]);
     }
 }
