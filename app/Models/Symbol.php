@@ -22,8 +22,8 @@ class Symbol extends Model
         'id_broker'
     ];
 
-    // public function broker()
-    // {
-    //     return $this->belongsTo(Broker::class);
-    // }
+    public function broker()
+    {
+        return $this->belongsTo(Broker::class);
+    }
 }

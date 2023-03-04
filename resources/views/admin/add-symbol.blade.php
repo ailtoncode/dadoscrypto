@@ -2,7 +2,8 @@
 @section('title', 'Login')
 
 @section('content')
-    <form action="}" method="POST" style="max-width: 450px">
+    <h3>Adicionar Token</h3>
+    <form method="GET" style="max-width: 450px">
     @csrf
     <div class="row">
         <div class="col">
@@ -12,7 +13,8 @@
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
+    <div id="viewListTokens">
+    </div>
     </form>
 @endsection
 
@@ -21,18 +23,27 @@
     $(function(){
         let term = ""
         let inputSearch = $("#symbolSearch")
-        inputSearch.keydown(function(){
+        let viewListTokens = $("#viewListTokens")
+        inputSearch.keyup(function(){
+            if(inputSearch.val() == ""){
+                viewListTokens.html('')
+                return
+            }
+            
             let url = "{{route('admin.get.tokens')}}"
             $.ajax({
                 method: "GET",
                 url: url,
-                data: { name: "John", location: "Boston" },
+                data: { term: inputSearch.val() },
                 dataType: 'json',
                 beforeSend: function(){
                     console.log('search ajax')
                 },
                 success: function(data){
-                    console.log(data)
+                    console.log(data.searchResult)
+                    if(data.searchResult) {
+                        viewListTokens.html(data.searchResult)
+                    }
                 },
                 error: function(erro) {
                     console.log(erro);

@@ -13,7 +13,6 @@ abstract class Brokers
     public function __construct($url)
     {
         $this->jsonObject = json_decode(FetchCurl::start($url), true);
-        //$this->jsonObject = json_decode(file_get_contents(__DIR__ . '/example-file/binance.txt'), true);
     }
 
     abstract public function processData(CoinInterface $coin);

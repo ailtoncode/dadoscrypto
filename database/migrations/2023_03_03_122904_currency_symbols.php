@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('currency_symbols', function (Blueprint $table) {
             $table->id();
-            $table->string('symbol')->unique();
+            $table->string('symbol');
             $table->unsignedBigInteger('id_broker');
             $table->foreign('id_broker')->references('id')->on('brokers')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
