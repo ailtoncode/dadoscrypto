@@ -4,6 +4,9 @@
 @section('content')
     <h3>Adicionar Token</h3>
     <form method="GET" style="max-width: 450px">
+    <div class="row mb-2">
+        <div class="col mx-3 py-1 rounded" id="message" style="display: none">mensagem</div>
+    </div>
     @csrf
     <div class="row">
         <div class="col">
@@ -52,8 +55,46 @@
         })
 
         //add tokens
-        $(document).on("click", ".token-add", function(){
+        $(document).on("click", ".add-user-currency", function(){
             let data = $(this).data()
+            let url = "{{route('dashboard.store.tokens')}}"
+            $.ajax({
+                method: "GET",
+                url: url,
+                data: { currencyId: data.id },
+                dataType: 'json',
+                beforeSend: function(){
+                    console.log('add token ajax')
+                },
+                success: function(data){
+                    if(data.success) {
+                        let message = $("#message")
+                        message.removeClass('message-error')
+                        message.addClass('message-success')
+                        message.html(data.message)
+                        message.fadeIn('slow', function() {
+                            setTimeout(() => {
+                                message.fadeOut('slow')
+                            }, 1500);
+                        })
+                    }
+
+                    if(data.error) {
+                        let message = $("#message")
+                        message.removeClass('message-success')
+                        message.addClass('message-error')
+                        message.html(data.message)
+                        message.fadeIn('slow', function() {
+                            setTimeout(() => {
+                                message.fadeOut('slow')
+                            }, 1500);
+                        })
+                    }
+                },
+                error: function(erro) {
+                    console.log(erro);
+                }
+            })
         })
     });
 </script>

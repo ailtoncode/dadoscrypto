@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\Exchange\Gate;
 use App\Services\Exchange\Coin;
-use App\Models\Symbol;
+use App\Models\CurrencySymbol;
 use App\Models\Broker;
 use App\Services\Exchange\Binance;
 
@@ -34,14 +34,14 @@ class ExchangeController extends Controller
         foreach ($gateSymbols as $value) {
             $symbol["symbol"] = $value;
             $symbol["id_broker"] = $broker->id;
-            Symbol::create($symbol);
+            CurrencySymbol::create($symbol);
         }
 
         $broker = Broker::where('name', 'binance')->first();
         foreach ($binanceSymbols as $value) {
             $symbol["symbol"] = $value;
             $symbol["id_broker"] = $broker->id;
-            Symbol::create($symbol);
+            CurrencySymbol::create($symbol);
         }
 
         return dd([$this->brokers->binance->getAllSymbols()]);

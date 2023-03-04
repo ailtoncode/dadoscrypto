@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CurrencySymbol;
+use App\Models\UserCurrency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +15,7 @@ class DashboardController extends Controller
             return redirect(route('dashboard.index'));
         }
 
-        $tokens = DB::table('currency_symbols')
+        $currencySymbols = DB::table('currency_symbols')
         ->join('brokers', 'currency_symbols.id_broker', '=', 'brokers.id')
         ->where('currency_symbols.symbol', 'LIKE', '%' . $request->term . '%')
         ->select([
@@ -25,7 +27,7 @@ class DashboardController extends Controller
         ->limit(10)->get();
 
         return Response()->json([
-            'searchResult' => view('dashboard.fragments.search-tokens', compact('tokens'))->render()
+            'searchResult' => view('dashboard.fragments.search-currency', compact('currencySymbols'))->render()
         ]);
     }
 
@@ -38,43 +40,40 @@ class DashboardController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
-    }
+        if (!$request->ajax()) {
+            return redirect(route('dashboard.index'));
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $currencyId = (int)$request->currencyId;
+        $idExists = CurrencySymbol::where('id', $currencyId)->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $coinAlreadyAdded = UserCurrency::where('id_currency_symbols', $currencyId)->first();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        if (!$idExists) {
+            return Response()->json(['error' => 'non-existent id']);
+        }
+
+        if ($coinAlreadyAdded) {
+            return Response()->json(['error' => true, 'message' => 'Essa moeda já foi adicionada']);
+        }
+
+        $addUserCurrency = [
+            'id_user' => auth()->user()->id,
+            'id_currency_symbols' => $currencyId
+        ];
+
+        UserCurrency::create($addUserCurrency);
+
+        $data = [
+            'success' => true,
+            'message' => 'adicionado com sucesso'
+        ];
+
+        return Response()->json($data);
     }
 
     /**

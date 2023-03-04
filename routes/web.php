@@ -13,7 +13,7 @@ Route::get('/', [SiteController::class, 'index'])->name('site.index')->middlewar
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('logged.user');
 Route::post('/auth', [LoginController::class, 'auth'])->name('login.auth')->middleware('logged.user');
 Route::get('/logout', [LoginController::class, 'logout'])->name('login.logout');
-Route::get('/register', [LoginController::class, 'create'])->name('login.create')->middleware('logged.user');
+Route::get('/register', [UserController::class, 'create'])->name('login.create')->middleware('logged.user');
 
 Route::prefix('exchange')->group(function () {
     Route::get('/symbols', [ExchangeController::class, 'symbols'])->name('exchange.symbols');
@@ -21,5 +21,6 @@ Route::prefix('exchange')->group(function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 Route::get('/dashboard/get/tokens', [DashboardController::class, 'searchTokens'])->name('dashboard.get.tokens')->middleware('auth');
+Route::get('/dashboard/store/tokens', [DashboardController::class, 'store'])->name('dashboard.store.tokens')->middleware('auth');
 
 Route::View('/dashboard/add/symbol', 'dashboard.add-symbol')->name('dashboard.add.symbol')->middleware('auth');

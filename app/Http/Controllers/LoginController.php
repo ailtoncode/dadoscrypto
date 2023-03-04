@@ -27,11 +27,6 @@ class LoginController extends Controller
         return redirect()->back()->with('erro', 'Email ou senha invalidos');
     }
 
-    public function create()
-    {
-        return view('login.create');
-    }
-
     public function logout()
     {
         Auth::logout();
