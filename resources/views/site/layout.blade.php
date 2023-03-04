@@ -18,21 +18,30 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                @if(auth()->check())
                 <li class="nav-item">
-                <a class="nav-link" href="{{route('add.symbol')}}">Token</a>
+                <a class="nav-link" href="{{route('dashboard.add.symbol')}}">Token</a>
+                </li>
+                @endif
+                <li class="nav-item">
+                <a class="nav-link" href="{{route('dashboard.add.symbol')}}">Premium</a>
                 </li>
             </ul>
             <div class="w-100">
                 <ul class="navbar-nav float-lg-end">
+                    @if(!auth()->check())
                     <li class="nav-item">
                     <a class="nav-link" href="{{route('login.create')}}">Register</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('login')}}">Login</a>
                     </li>
+                    @endif
+                    @if(auth()->check())
                     <li class="nav-item">
                         <a class="nav-link" href="{{route('login.logout')}}">Logout</a>
                     </li>
+                    @endif
                 </ul>
             </div>
             </div>

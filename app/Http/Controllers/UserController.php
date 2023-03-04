@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $user = User::create($user);
         Auth::login($user);
-        redirect()->route('dashboard');
+        redirect()->route('dashboard.index');
     }
 
     /**

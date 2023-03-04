@@ -1,5 +1,5 @@
 @extends('site.layout')
-@section('title', 'Login')
+@section('title', 'Adicionat tokens')
 
 @section('content')
     <h3>Adicionar Token</h3>
@@ -29,8 +29,8 @@
                 viewListTokens.html('')
                 return
             }
-            
-            let url = "{{route('admin.get.tokens')}}"
+
+            let url = "{{route('dashboard.get.tokens')}}"
             $.ajax({
                 method: "GET",
                 url: url,
@@ -49,6 +49,11 @@
                     console.log(erro);
                 }
             })
+        })
+
+        //add tokens
+        $(document).on("click", ".token-add", function(){
+            let data = $(this).data()
         })
     });
 </script>
