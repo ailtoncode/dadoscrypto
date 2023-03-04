@@ -1,11 +1,16 @@
-@if($message = Session::get('erro'))
-    {{--dd($errors->all())--}}
-    {{$messagezzz}}
+@extends('site.layout')
+@section('title', 'Login')
 
-    @endif
-<form action="{{route('login.auth')}}" method="POST">
-@csrf
-<input type="text" name="email">
-<input type="password" name="password" value="12345678">
-<button type="submit">Salvar</button>
-</form>
+@section('content')
+    @if($message = Session::get('erro'))
+        {{--dd($errors->all())--}}
+        {{$message}}
+
+        @endif
+    <form action="{{route('login.auth')}}" method="POST">
+    @csrf
+    <input type="text" name="email">
+    <input type="password" name="password" value="12345678">
+    <button type="submit">Salvar</button>
+    </form>
+@endsection

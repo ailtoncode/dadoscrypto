@@ -9,11 +9,45 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 </head>
 <body>
-
+<div class="container">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{route('site.index')}}">DCrypto</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                <a class="nav-link" href="{{route('add.symbol')}}">Token</a>
+                </li>
+            </ul>
+            <div class="w-100">
+                <ul class="navbar-nav float-lg-end">
+                    <li class="nav-item">
+                    <a class="nav-link" href="{{route('login.create')}}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('login')}}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{route('login.logout')}}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="container">
 @yield('content')
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+@yield('script')
 
 </body>
 </html>
