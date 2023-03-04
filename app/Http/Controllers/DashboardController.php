@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CurrencySymbol;
 use App\Models\UserCurrency;
+use App\Services\Alert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -54,11 +55,11 @@ class DashboardController extends Controller
         $coinAlreadyAdded = UserCurrency::where('id_currency_symbols', $currencyId)->first();
 
         if (!$idExists) {
-            return Response()->json(['error' => 'non-existent id']);
+            return Response()->json(['error' => true, 'message' => Alert::error('Moeda inexistente')]);
         }
 
         if ($coinAlreadyAdded) {
-            return Response()->json(['error' => true, 'message' => 'Essa moeda já foi adicionada']);
+            return Response()->json(['error' => true, 'message' => Alert::error('Essa moeda já foi adicionada')]);
         }
 
         $addUserCurrency = [
@@ -70,7 +71,7 @@ class DashboardController extends Controller
 
         $data = [
             'success' => true,
-            'message' => 'adicionado com sucesso'
+            'message' => Alert::success('adicionado com sucesso')
         ];
 
         return Response()->json($data);
