@@ -2,7 +2,7 @@
 @section('title', 'Adicionat tokens')
 
 @section('content')
-    <h3>Adicionar Token</h3>
+    <h3>Adicionar Moeda</h3>
     <form method="GET" style="max-width: 450px">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div class="row mb-2">
@@ -16,7 +16,7 @@
             </div>
         </div>
     </div>
-    <div id="viewListTokens">
+    <div id="viewListCurrency">
     </div>
     </form>
 @endsection
@@ -26,14 +26,14 @@
     $(function(){
         let term = ""
         let inputSearch = $("#symbolSearch")
-        let viewListTokens = $("#viewListTokens")
+        let viewListCurrency = $("#viewListCurrency")
         inputSearch.keyup(function(){
             if(inputSearch.val() == ""){
-                viewListTokens.html('')
+                viewListCurrency.html('')
                 return
             }
 
-            let url = "{{route('dashboard.token.get')}}"
+            let url = "{{route('dashboard.currency.get')}}"
             $.ajax({
                 method: "GET",
                 url: url,
@@ -45,7 +45,7 @@
                 success: function(data){
                     console.log(data.searchResult)
                     if(data.searchResult) {
-                        viewListTokens.html(data.searchResult)
+                        viewListCurrency.html(data.searchResult)
                     }
                 },
                 error: function(erro) {
@@ -58,7 +58,7 @@
         $(document).on("click", ".add-user-currency", function(){
             let data = $(this).data()
             let currencySelected = $(this).parent()
-            let url = "{{route('dashboard.token.store')}}"
+            let url = "{{route('dashboard.currency.store')}}"
 
             $.ajaxSetup({
                 headers: {

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function searchTokens(Request $request)
+    public function searchCurrency(Request $request)
     {
         if (!$request->ajax()) {
             return redirect(route('dashboard.index'));
@@ -25,7 +25,7 @@ class DashboardController extends Controller
             'currency_symbols.id AS currencyId',
             'currency_symbols.symbol AS currencySymbol'
         ])
-        ->limit(10)->get();
+        ->limit(10)->first();
 
         return Response()->json([
             'searchResult' => view('dashboard.fragments.search-currency', compact('currencySymbols'))->render()
@@ -76,7 +76,7 @@ class DashboardController extends Controller
 
         $currencyLimit = UserCurrency::where('id_user', Auth::user()->id)->get()->count();
         if ($currencyLimit == 5) {
-            return Response()->json(['error' => true, 'message' => 'Limite de tokens atingido, Premium aqui']);
+            return Response()->json(['error' => true, 'message' => 'Limite de moedas atingido, Premium aqui']);
         }
 
         $addUserCurrency = [
@@ -99,7 +99,20 @@ class DashboardController extends Controller
     {
         $symbol = mb_strtolower($symbol);
 
-        return view('dashboard.show-token');
+        $currencyUserSelect = DB::table('user_currency')
+        ->join('currency_symbols', 'currency_symbols.id', '=', 'user_currency.id_currency_symbol')
+        ->join('brokers', 'brokers.id', '=', 'currency_symbols.id_broker')
+        ->where('user_currency.id_user', Auth::user()->id)
+        ->where('currency_symbols.symbol', $symbol)
+        ->select(
+            'brokers.name AS brokerName',
+            'currency_symbols.symbol AS symbol'
+        )
+        ->get();
+
+        //dd($currencyUserSelect);
+
+        return view('dashboard.show-currency', compact('currencyUserSelect'));
     }
 
     /**
