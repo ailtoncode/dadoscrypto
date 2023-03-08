@@ -100,21 +100,33 @@ class DashboardController extends Controller
         $currencyUserSelect = DB::table('user_currency')
         ->join('currency_symbols', 'currency_symbols.id', '=', 'user_currency.id_currency_symbol')
         ->join('brokers', 'brokers.id', '=', 'currency_symbols.id_broker')
-        ->join('currency_history', 'currency_history.id_broker', '=', 'brokers.id')
+        ->join('currency_history', 'brokers.id', '=', 'currency_history.id_broker')
         ->where('user_currency.id_user', Auth::user()->id)
         ->where('currency_symbols.symbol', $symbol)
-        ->select(
-            'brokers.id AS brokerId',
-            'brokers.name AS brokerName',
-            'currency_symbols.symbol AS symbol',
-            'currency_history.id AS currencyHistoryId',
-            'currency_history.data_json AS dataJson'
-        )
         ->get();
 
-        dd($currencyUserSelect);
+        $currencyData = [
+            'brokerId' => $currencyUserSelect[0]->id_broker,
+            'brokerName' => $currencyUserSelect[0]->name,
+            'symbol' => $currencyUserSelect[0]->symbol,
+            'symbolId' => $currencyUserSelect[0]->id_currency_symbol,
+            'dataJson' => []
+        ];
 
-        return view('dashboard.show-currency', compact('currencyUserSelect'));
+        $dataCoin = [];
+        foreach ($currencyUserSelect as $currency) {
+            $json = json_decode($currency->data_json);
+            foreach ($json as $obj) {
+                if ($obj->symbol == mb_strtoupper($symbol)) {
+                    $dataCoin[] = $obj;
+                }
+            }
+        }
+
+        $currencyData['dataJson'] = $dataCoin;
+        $currencyData = (object)$currencyData;
+
+        return view('dashboard.show-currency', compact('currencyData'));
     }
 
     /**

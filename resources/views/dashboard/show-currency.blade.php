@@ -3,10 +3,10 @@
 
 @section('content')
 @php
-// dd($currencyUserSelect[0]->brokerName)
+// dd($currencyData[0]->brokerName)
 @endphp
 
-<h3 class="fs-6">{{Str::ucfirst($currencyUserSelect[0]->brokerName)}} {{$currencyUserSelect[0]->symbol}}</h3>
+<h3 class="fs-6">{{Str::ucfirst($currencyData->brokerName)}} {{$currencyData->symbol}}</h3>
 <div style="font-size: 14px">
     <table>
         <thead>
