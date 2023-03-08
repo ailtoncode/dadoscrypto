@@ -13,6 +13,6 @@ class UserCurrency extends Model
 
     protected $fillable = [
         'id_user',
-        'id_currency_symbols'
+        'id_currency_symbol'
     ];
 }

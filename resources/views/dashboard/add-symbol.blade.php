@@ -4,10 +4,10 @@
 @section('content')
     <h3>Adicionar Token</h3>
     <form method="GET" style="max-width: 450px">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div class="row mb-2">
         <div class="col" id="message" style="display: none">mensagem</div>
     </div>
-    @csrf
     <div class="row">
         <div class="col">
             <div class="form-floating">
@@ -33,7 +33,7 @@
                 return
             }
 
-            let url = "{{route('dashboard.get.tokens')}}"
+            let url = "{{route('dashboard.token.get')}}"
             $.ajax({
                 method: "GET",
                 url: url,
@@ -57,9 +57,17 @@
         //add tokens
         $(document).on("click", ".add-user-currency", function(){
             let data = $(this).data()
-            let url = "{{route('dashboard.store.tokens')}}"
+            let currencySelected = $(this).parent()
+            let url = "{{route('dashboard.token.store')}}"
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $.ajax({
-                method: "GET",
+                method: "POST",
                 url: url,
                 data: { currencyId: data.id },
                 dataType: 'json',
@@ -69,25 +77,22 @@
                 success: function(data){
                     if(data.success) {
                         let message = $("#message")
-                        // message.removeClass('message-error')
-                        // message.addClass('message-success')
                         message.html(data.message)
+                        currencySelected.fadeOut('slow')
                         message.fadeIn('slow', function() {
                             setTimeout(() => {
                                 message.fadeOut('slow')
-                            }, 1500);
+                            }, 3000);
                         })
                     }
 
                     if(data.error) {
                         let message = $("#message")
-                        // message.removeClass('message-success')
-                        // message.addClass('message-error')
                         message.html(data.message)
                         message.fadeIn('slow', function() {
                             setTimeout(() => {
                                 message.fadeOut('slow')
-                            }, 1500);
+                            }, 3000);
                         })
                     }
                 },

@@ -21,9 +21,4 @@ class CurrencySymbol extends Model
         'symbol',
         'id_broker'
     ];
-
-    public function broker()
-    {
-        return $this->belongsTo(Broker::class);
-    }
 }

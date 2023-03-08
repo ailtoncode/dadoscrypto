@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->unsignedBigInteger('id_currency_symbols');
-            $table->foreign('id_currency_symbols')->references('id')->on('currency_symbols')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('id_currency_symbol');
+            $table->foreign('id_currency_symbol')->references('id')->on('currency_symbols')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

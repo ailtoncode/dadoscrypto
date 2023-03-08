@@ -20,7 +20,8 @@ Route::prefix('exchange')->group(function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
-Route::get('/dashboard/get/tokens', [DashboardController::class, 'searchTokens'])->name('dashboard.get.tokens')->middleware('auth');
-Route::get('/dashboard/store/tokens', [DashboardController::class, 'store'])->name('dashboard.store.tokens')->middleware('auth');
+Route::get('/dashboard/token/get', [DashboardController::class, 'searchTokens'])->name('dashboard.token.get')->middleware('auth');
+Route::get('/dashboard/token/{symbol}', [DashboardController::class, 'show'])->name('dashboard.token.show')->middleware('auth');
+Route::post('/dashboard/token/store', [DashboardController::class, 'store'])->name('dashboard.token.store')->middleware('auth');
 
-Route::View('/dashboard/add/symbol', 'dashboard.add-symbol')->name('dashboard.add.symbol')->middleware('auth');
+Route::View('/dashboard/symbol/add', 'dashboard.add-symbol')->name('dashboard.symbol.add')->middleware('auth');

@@ -21,11 +21,11 @@
             <ul class="navbar-nav">
                 @if(auth()->check())
                 <li class="nav-item">
-                <a class="nav-link" href="{{route('dashboard.add.symbol')}}">Token</a>
+                <a class="nav-link" href="{{route('dashboard.symbol.add')}}">Token</a>
                 </li>
                 @endif
                 <li class="nav-item">
-                <a class="nav-link" href="{{route('dashboard.add.symbol')}}">Premium</a>
+                <a class="nav-link" href="#">Premium</a>
                 </li>
             </ul>
             <div class="w-100">

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CurrencySymbol;
 use App\Models\UserCurrency;
-use App\Services\Alert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -37,7 +37,19 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard.index');
+        $userCurrencySymbols = DB::table('currency_symbols')
+        ->join('brokers', 'currency_symbols.id_broker', '=', 'brokers.id')
+
+        ->join('user_currency', 'user_currency.id_currency_symbol', '=', 'currency_symbols.id')
+        ->where('user_currency.id_user', '=', Auth::user()->id)
+        ->select([
+            'brokers.name AS brokerName',
+            'currency_symbols.id AS currencyId',
+            'user_currency.id AS userCurrencyId',
+            'currency_symbols.symbol AS currencySymbol'
+        ])->get();
+
+        return view('dashboard.index', compact('userCurrencySymbols'));
     }
 
     /**
@@ -52,29 +64,42 @@ class DashboardController extends Controller
         $currencyId = (int)$request->currencyId;
         $idExists = CurrencySymbol::where('id', $currencyId)->first();
 
-        $coinAlreadyAdded = UserCurrency::where('id_currency_symbols', $currencyId)->first();
+        $coinAlreadyAdded = UserCurrency::where('id_currency_symbol', $currencyId)->first();
 
         if (!$idExists) {
-            return Response()->json(['error' => true, 'message' => Alert::error('Moeda inexistente')]);
+            return Response()->json(['error' => true, 'message' => 'Moeda inexistente']);
         }
 
         if ($coinAlreadyAdded) {
-            return Response()->json(['error' => true, 'message' => Alert::error('Essa moeda já foi adicionada')]);
+            return Response()->json(['error' => true, 'message' => 'Essa moeda já foi adicionada']);
+        }
+
+        $currencyLimit = UserCurrency::where('id_user', Auth::user()->id)->get()->count();
+        if ($currencyLimit == 5) {
+            return Response()->json(['error' => true, 'message' => 'Limite de tokens atingido, Premium aqui']);
         }
 
         $addUserCurrency = [
             'id_user' => auth()->user()->id,
-            'id_currency_symbols' => $currencyId
+            'id_currency_symbol' => $currencyId
         ];
+
 
         UserCurrency::create($addUserCurrency);
 
         $data = [
             'success' => true,
-            'message' => Alert::success('adicionado com sucesso')
+            'message' => 'adicionado com sucesso'
         ];
 
         return Response()->json($data);
+    }
+
+    public function show($symbol)
+    {
+        $symbol = mb_strtolower($symbol);
+
+        return view('dashboard.show-token');
     }
 
     /**

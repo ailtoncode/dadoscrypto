@@ -32,16 +32,22 @@ class ExchangeController extends Controller
 
         $broker = Broker::where('name', 'gate')->first();
         foreach ($gateSymbols as $value) {
-            $symbol["symbol"] = $value;
-            $symbol["id_broker"] = $broker->id;
-            CurrencySymbol::create($symbol);
+            $checkIfExists = CurrencySymbol::where('symbol', $value)->where('id_broker', $broker->id)->first();
+            if (!$checkIfExists) {
+                $symbol["symbol"] = $value;
+                $symbol["id_broker"] = $broker->id;
+                CurrencySymbol::create($symbol);
+            }
         }
 
         $broker = Broker::where('name', 'binance')->first();
         foreach ($binanceSymbols as $value) {
-            $symbol["symbol"] = $value;
-            $symbol["id_broker"] = $broker->id;
-            CurrencySymbol::create($symbol);
+            $checkIfExists = CurrencySymbol::where('symbol', $value)->where('id_broker', $broker->id)->first();
+            if (!$checkIfExists) {
+                $symbol["symbol"] = $value;
+                $symbol["id_broker"] = $broker->id;
+                CurrencySymbol::create($symbol);
+            }
         }
 
         return dd([$this->brokers->binance->getAllSymbols()]);
