@@ -17,6 +17,7 @@ Route::get('/register', [UserController::class, 'create'])->name('login.create')
 
 Route::prefix('exchange')->group(function () {
     Route::get('/symbols', [ExchangeController::class, 'symbols'])->name('exchange.symbols');
+    Route::get('/store', [ExchangeController::class, 'store'])->name('exchange.store');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');

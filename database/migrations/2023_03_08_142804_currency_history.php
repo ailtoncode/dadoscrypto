@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('broker_symbols', function (Blueprint $table) {
+        Schema::create('currency_history', function (Blueprint $table) {
             $table->id();
+            $table->longText('data_json');
             $table->unsignedBigInteger('id_broker');
             $table->foreign('id_broker')->references('id')->on('brokers')->onDelete('cascade')->onUpdate('cascade');
-            $table->unsignedBigInteger('id_currency_symbols');
-            $table->foreign('id_currency_symbols')->references('id')->on('currency_symbols')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('broker_symbols');
+        Schema::dropIfExists('currency_history');
     }
 };

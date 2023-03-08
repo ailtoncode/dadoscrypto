@@ -6,7 +6,12 @@ interface CoinInterface
 {
     public function create(
         string $symbol,
-        float $lastPrice
+        float $lastPrice,
+        float $variation,
+        float $variationPercent,
+        float $maximum,
+        float $minimum,
+        float $volume
     );
 
     public function getSymbol();

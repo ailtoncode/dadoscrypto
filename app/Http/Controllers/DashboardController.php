@@ -100,15 +100,19 @@ class DashboardController extends Controller
         $currencyUserSelect = DB::table('user_currency')
         ->join('currency_symbols', 'currency_symbols.id', '=', 'user_currency.id_currency_symbol')
         ->join('brokers', 'brokers.id', '=', 'currency_symbols.id_broker')
+        ->join('currency_history', 'currency_history.id_broker', '=', 'brokers.id')
         ->where('user_currency.id_user', Auth::user()->id)
         ->where('currency_symbols.symbol', $symbol)
         ->select(
+            'brokers.id AS brokerId',
             'brokers.name AS brokerName',
-            'currency_symbols.symbol AS symbol'
+            'currency_symbols.symbol AS symbol',
+            'currency_history.id AS currencyHistoryId',
+            'currency_history.data_json AS dataJson'
         )
         ->get();
 
-        //dd($currencyUserSelect);
+        dd($currencyUserSelect);
 
         return view('dashboard.show-currency', compact('currencyUserSelect'));
     }

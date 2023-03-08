@@ -46,7 +46,12 @@ class Binance extends Brokers
             $coinCopy = clone $coin;
             $coinCopy->create(
                 $dataCoin["symbol"],
-                $dataCoin["lastPrice"]
+                $dataCoin["lastPrice"],
+                $dataCoin["priceChange"],
+                $dataCoin["priceChangePercent"],
+                $dataCoin["highPrice"],
+                $dataCoin["lowPrice"],
+                $dataCoin["quoteVolume"],
             );
             $this->addCoin($coinCopy);
         }
