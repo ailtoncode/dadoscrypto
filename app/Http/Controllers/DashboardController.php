@@ -25,8 +25,7 @@ class DashboardController extends Controller
             'currency_symbols.id AS currencyId',
             'currency_symbols.symbol AS currencySymbol'
         ])
-        ->limit(10)->first();
-
+        ->limit(10)->get();
         return Response()->json([
             'searchResult' => view('dashboard.fragments.search-currency', compact('currencySymbols'))->render()
         ]);
@@ -39,7 +38,6 @@ class DashboardController extends Controller
     {
         $userCurrencySymbols = DB::table('currency_symbols')
         ->join('brokers', 'currency_symbols.id_broker', '=', 'brokers.id')
-
         ->join('user_currency', 'user_currency.id_currency_symbol', '=', 'currency_symbols.id')
         ->where('user_currency.id_user', '=', Auth::user()->id)
         ->select([
