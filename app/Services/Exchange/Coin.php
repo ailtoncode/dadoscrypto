@@ -19,12 +19,12 @@ class Coin implements CoinInterface
 
     public function create(
         string $symbol,
-        float $lastPrice,
-        float $variation,
-        float $variationPercent,
-        float $maximum,
-        float $minimum,
-        float $volume
+        string $lastPrice,
+        string $variation,
+        string $variationPercent,
+        string $maximum,
+        string $minimum,
+        string $volume
     ) {
         $this->dateTime = new DateTime('now');
         $this->symbol = $symbol;

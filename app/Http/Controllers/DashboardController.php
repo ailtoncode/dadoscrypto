@@ -93,9 +93,10 @@ class DashboardController extends Controller
         return Response()->json($data);
     }
 
-    public function show($symbol)
+    public function show($broker, $symbol)
     {
-        $symbol = mb_strtolower($symbol);
+        $symbol = mb_strtoupper($symbol);
+        $broker = mb_strtolower($broker);
 
         $currencyUserSelect = DB::table('user_currency')
         ->join('currency_symbols', 'currency_symbols.id', '=', 'user_currency.id_currency_symbol')
@@ -103,10 +104,15 @@ class DashboardController extends Controller
         ->join('currency_history', 'brokers.id', '=', 'currency_history.id_broker')
         ->where('user_currency.id_user', Auth::user()->id)
         ->where('currency_symbols.symbol', $symbol)
+        ->where('brokers.name', $broker)
         ->get();
 
+        if (count($currencyUserSelect) == 0) {
+            return 'Ops..';
+        }
+
         $currencyData = [
-            'brokerId' => $currencyUserSelect[0]->id_broker,
+            'brokerId' =>  $currencyUserSelect[0]->id_broker,
             'brokerName' => $currencyUserSelect[0]->name,
             'symbol' => $currencyUserSelect[0]->symbol,
             'symbolId' => $currencyUserSelect[0]->id_currency_symbol,
@@ -126,7 +132,7 @@ class DashboardController extends Controller
         $currencyData['dataJson'] = $dataCoin;
         $currencyData = (object)$currencyData;
 
-        return view('dashboard.show-currency', compact('currencyData'));
+        return view('dashboard.history-currency', compact('currencyData'));
     }
 
     /**

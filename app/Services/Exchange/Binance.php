@@ -41,17 +41,16 @@ class Binance extends Brokers
         if ($this->jsonObject == null) {
             return;
         }
-
         foreach ($this->jsonObject as $dataCoin) {
             $coinCopy = clone $coin;
             $coinCopy->create(
                 $dataCoin["symbol"],
-                $dataCoin["lastPrice"],
-                $dataCoin["priceChange"],
-                $dataCoin["priceChangePercent"],
-                $dataCoin["highPrice"],
-                $dataCoin["lowPrice"],
-                $dataCoin["quoteVolume"],
+                FormatToNumberPrecision::format($dataCoin["lastPrice"]),
+                FormatToNumberPrecision::format($dataCoin["priceChange"]),
+                FormatToNumberPrecision::format($dataCoin["priceChangePercent"]),
+                FormatToNumberPrecision::format($dataCoin["highPrice"]),
+                FormatToNumberPrecision::format($dataCoin["lowPrice"]),
+                FormatToNumberPrecision::format($dataCoin["quoteVolume"]),
             );
             $this->addCoin($coinCopy);
         }

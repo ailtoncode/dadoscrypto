@@ -22,7 +22,7 @@
                 <ul class="navbar-nav navbar-link">
                     @if(auth()->check())
                     <li class="nav-item">
-                    <a class="nav-link" href="{{route('dashboard.symbol.add')}}">Token</a>
+                    <a class="nav-link" href="{{route('symbol.add')}}">Token</a>
                     </li>
                     @endif
                     <li class="nav-item">

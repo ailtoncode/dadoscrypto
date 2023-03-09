@@ -3,7 +3,7 @@
 
 @section('content')
 @php
-// dd($currencyData[0]->brokerName)
+// dd($currencyData)
 @endphp
 
 <h3 class="fs-6">{{Str::ucfirst($currencyData->brokerName)}} {{$currencyData->symbol}}</h3>
@@ -21,15 +21,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="border-bottom border-2">
-                <td class="px-2">08/03/2023 08:45</td>
-                <td class="px-2">0.0000024587546987</td>
-                <td class="px-2">0.0000024587546987</td>
-                <td class="px-2">0.0000024587546987</td>
-                <td class="px-2">0.0000024587546987</td>
-                <td class="px-2">0.0000024587546987</td>
-                <td class="px-2">0.0000024587546987</td>
+            @foreach ($currencyData->dataJson as $item)
+            <tr class="border-bottom border-2 text-center">
+                <td class="px-2">{{$item->created_at->date}}</td>
+                <td class="px-2">{{$item->price}}</td>
+                <td class="px-2">{{$item->variation}}</td>
+                <td class="px-2">{{$item->variation_percent}}</td>
+                <td class="px-2">{{$item->maximum}}</td>
+                <td class="px-2">{{$item->minimum}}</td>
+                <td class="px-2">{{$item->volume}}</td>
             </tr>
+            @endforeach
         </tbody>
     </table>
 

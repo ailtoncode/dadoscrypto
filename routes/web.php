@@ -21,8 +21,8 @@ Route::prefix('exchange')->group(function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
-Route::get('/dashboard/currency/get', [DashboardController::class, 'searchCurrency'])->name('dashboard.currency.get')->middleware('auth');
-Route::get('/dashboard/currency/{symbol}', [DashboardController::class, 'show'])->name('dashboard.currency.show')->middleware('auth');
-Route::post('/dashboard/currency/store', [DashboardController::class, 'store'])->name('dashboard.currency.store')->middleware('auth');
+Route::get('/currency/search', [DashboardController::class, 'searchCurrency'])->name('currency.search')->middleware('auth');
+Route::get('/{broker}/currency/{symbol}', [DashboardController::class, 'show'])->name('history.show')->middleware('auth');
+Route::post('/currency/store', [DashboardController::class, 'store'])->name('currency.store')->middleware('auth');
 
-Route::View('/dashboard/symbol/add', 'dashboard.add-symbol')->name('dashboard.symbol.add')->middleware('auth');
+Route::View('/symbol/add', 'dashboard.add-symbol')->name('symbol.add')->middleware('auth');

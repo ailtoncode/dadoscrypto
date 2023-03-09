@@ -33,7 +33,7 @@
                 return
             }
 
-            let url = "{{route('dashboard.currency.get')}}"
+            let url = "{{route('currency.search')}}"
             $.ajax({
                 method: "GET",
                 url: url,
@@ -58,7 +58,7 @@
         $(document).on("click", ".add-user-currency", function(){
             let data = $(this).data()
             let currencySelected = $(this).parent()
-            let url = "{{route('dashboard.currency.store')}}"
+            let url = "{{route('currency.store')}}"
 
             $.ajaxSetup({
                 headers: {

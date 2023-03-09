@@ -38,12 +38,12 @@ class Gate extends Brokers
             $priceVariation = ($dataCoin["last"] * $dataCoin["change_percentage"]) / 100;
             $coinCopy->create(
                 str_replace('_', '', $dataCoin["currency_pair"]),
-                $dataCoin["last"],
-                $priceVariation,
-                $dataCoin["change_percentage"],
-                $dataCoin["high_24h"],
-                $dataCoin["low_24h"],
-                $dataCoin['quote_volume']
+                FormatToNumberPrecision::format($dataCoin["last"]),
+                FormatToNumberPrecision::format($priceVariation),
+                FormatToNumberPrecision::format($dataCoin["change_percentage"]),
+                FormatToNumberPrecision::format($dataCoin["high_24h"]),
+                FormatToNumberPrecision::format($dataCoin["low_24h"]),
+                FormatToNumberPrecision::format($dataCoin['quote_volume'])
             );
             $this->addCoin($coinCopy);
         }
