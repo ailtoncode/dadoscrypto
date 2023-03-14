@@ -97,42 +97,79 @@ class DashboardController extends Controller
     {
         $symbol = mb_strtoupper($symbol);
         $broker = mb_strtolower($broker);
+        $offset = 0;
 
-        $currencyUserSelect = DB::table('user_currency')
+        $history = $this->selectHistoryCurrency($broker, $symbol, $offset);
+
+        if (!$history) {
+            return view('dashboard.coin-not-found');
+        }
+
+        return view('dashboard.history-currency', compact('history'));
+    }
+
+    public function loadMore(Request $request, $broker, $symbol, $offset = 0)
+    {
+        if (!$request->ajax()) {
+            return redirect(route('dashboard.index'));
+        }
+
+        $history = $this->selectHistoryCurrency($broker, $symbol, $offset);
+        $html = "";
+        if (isset($history->dataJson)) {
+            foreach ($history->dataJson as $item) {
+                $html .= view('dashboard.fragments.history-grid', compact(['history', 'item']))->render();
+            }
+        }
+
+        $html = $html == "" ? ['error' => true] : $html;
+        return Response()->json($html);
+    }
+
+    private function selectHistoryCurrency($broker, $symbol, $offset = 0)
+    {
+        $query = DB::table('user_currency')
         ->join('currency_symbols', 'currency_symbols.id', '=', 'user_currency.id_currency_symbol')
         ->join('brokers', 'brokers.id', '=', 'currency_symbols.id_broker')
         ->join('currency_history', 'brokers.id', '=', 'currency_history.id_broker')
         ->where('user_currency.id_user', Auth::user()->id)
         ->where('currency_symbols.symbol', $symbol)
         ->where('brokers.name', $broker)
+        ->offset($offset)
+        ->limit(25)
         ->get();
 
-        if (count($currencyUserSelect) == 0) {
-            return 'Ops..';
+        if (!isset($query[0])) {
+            return;
         }
 
-        $currencyData = [
-            'brokerId' =>  $currencyUserSelect[0]->id_broker,
-            'brokerName' => $currencyUserSelect[0]->name,
-            'symbol' => $currencyUserSelect[0]->symbol,
-            'symbolId' => $currencyUserSelect[0]->id_currency_symbol,
+        $history = [
+            'offset' => $offset,
+            'brokerId' =>  $query[0]->id_broker,
+            'brokerName' => $query[0]->name,
+            'symbol' => $query[0]->symbol,
+            'symbolId' => $query[0]->id_currency_symbol,
             'dataJson' => []
         ];
 
         $dataCoin = [];
-        foreach ($currencyUserSelect as $currency) {
+        foreach ($query as $currency) {
             $json = json_decode($currency->data_json);
             foreach ($json as $obj) {
                 if ($obj->symbol == mb_strtoupper($symbol)) {
+                    $dateTime = $obj->created_at->date;
+                    $now = new \dateTime($dateTime);
+                    $dateTime = $now->format('Y/m/d - H:i');
+                    $obj->dateTime = $dateTime;
                     $dataCoin[] = $obj;
                 }
             }
         }
 
-        $currencyData['dataJson'] = $dataCoin;
-        $currencyData = (object)$currencyData;
+        $history['dataJson'] = $dataCoin;
+        $history = (object)$history;
 
-        return view('dashboard.history-currency', compact('currencyData'));
+        return $history;
     }
 
     /**

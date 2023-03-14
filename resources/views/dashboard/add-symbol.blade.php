@@ -2,7 +2,8 @@
 @section('title', 'Adicionat tokens')
 
 @section('content')
-    <h3>Adicionar Moeda</h3>
+<div class="mx-4 mt-3 mb-1 ">
+    <h3 class="fs-5">Adicionar Moeda</h3>
     <form method="GET" style="max-width: 450px">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div class="row mb-2">
@@ -19,6 +20,7 @@
     <div id="viewListCurrency">
     </div>
     </form>
+</div>
 @endsection
 
 @section('script')

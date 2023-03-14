@@ -2,7 +2,7 @@
 @section('title', 'Home')
 @section('content')
 {{-- {{dd($userCurrencySymbols)}} --}}
-<div style="max-width: 450px">
+<div class="mx-4 mt-3 mb-1" style="max-width: 450px">
     <h1 class="fs-5">Moedas</h1>
     @foreach ($userCurrencySymbols as $currency)
     @php $fontColor = $currency->brokerName == 'binance' ? 'rgb(199, 161, 11)' : 'rgb(77, 112, 229)' @endphp

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CurrencyHistoryTable;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExchangeController;
 use App\Http\Controllers\LoginController;
@@ -22,7 +23,8 @@ Route::prefix('exchange')->group(function () {
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 Route::get('/currency/search', [DashboardController::class, 'searchCurrency'])->name('currency.search')->middleware('auth');
-Route::get('/{broker}/currency/{symbol}', [DashboardController::class, 'show'])->name('history.show')->middleware('auth');
+Route::get('/{broker}/currency/{symbol}/', [DashboardController::class, 'show'])->name('history.show')->middleware('auth');
+Route::get('/{broker}/currency/{symbol}/more/{offset}', [DashboardController::class, 'loadMore'])->name('history.loadMore')->middleware('auth');
 Route::post('/currency/store', [DashboardController::class, 'store'])->name('currency.store')->middleware('auth');
 
 Route::View('/symbol/add', 'dashboard.add-symbol')->name('symbol.add')->middleware('auth');
